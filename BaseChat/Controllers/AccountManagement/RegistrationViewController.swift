@@ -23,10 +23,10 @@ class RegistrationViewController: UIViewController {
         imageView.contentMode = .scaleAspectFit
         
         //circular image picker
-        imageView.layer.masksToBounds = false
+        imageView.layer.masksToBounds = true
         imageView.clipsToBounds = true
         imageView.layer.borderWidth = 1
-        imageView.layer.borderColor = UIColor.black.cgColor
+        imageView.layer.borderColor = UIColor.lightGray.cgColor
         
         return imageView
     }()
@@ -253,7 +253,7 @@ class RegistrationViewController: UIViewController {
     
     @objc private func DidTapChangeProfilePicture()
     {
-        print("Change profile picture called")
+        PresentPhotoOptions()
     }
     
     //Get rid of the keyboard
@@ -285,5 +285,62 @@ extension RegistrationViewController: UITextFieldDelegate
         }
         
         return true
+    }
+}
+
+extension RegistrationViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate
+{
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any])
+    {
+        picker.dismiss(animated: true, completion: nil)
+        print(info)
+        //update the profile picture on the UI
+        //displays the picked image on screen
+        guard let selectedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else
+        {
+            return
+        }
+        
+        self.profilePicture.image = selectedImage
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController)
+    {
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    func PresentPhotoOptions()
+    {
+        let alert = UIAlertController(title: "Profile picture", message: "How would you like to select your profile picture?", preferredStyle: .actionSheet)
+        
+        alert.addAction(UIAlertAction(title: "Take photo", style: .default, handler: { [weak self] (_) in
+            self?.PresentCamera()
+        }))
+        alert.addAction(UIAlertAction(title: "Choose from library", style: .default, handler: { [weak self] (_) in
+            self?.PresentLibrary()
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func PresentCamera()
+    {
+        let controller = UIImagePickerController()
+        controller.sourceType = .camera
+        controller.delegate = self
+        //allows user to select a cropped square
+        controller.allowsEditing = true
+        present(controller, animated: true)
+    }
+    
+    func PresentLibrary()
+    {
+        let controller = UIImagePickerController()
+        controller.sourceType = .photoLibrary
+        controller.delegate = self
+        //allows user to select a cropped square
+        controller.allowsEditing = true
+        present(controller, animated: true)
     }
 }
