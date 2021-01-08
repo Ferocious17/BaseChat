@@ -7,6 +7,10 @@ target 'BaseChat' do
 
   # Pods for BaseChat
 
+pod 'Firebase/Core'
+pod 'Firebase/Auth'
+pod 'Firebase/Database'
+
   target 'BaseChatTests' do
     inherit! :search_paths
     # Pods for testing

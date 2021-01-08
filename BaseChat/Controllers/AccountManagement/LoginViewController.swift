@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class LoginViewController: UIViewController {
 
@@ -40,6 +41,7 @@ class LoginViewController: UIViewController {
         field.layer.borderWidth = 1
         field.layer.borderColor = UIColor.lightGray.cgColor
         field.placeholder = "email@provider.com"
+        field.keyboardType = .emailAddress
         
         //add a padding to the left
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
@@ -206,6 +208,17 @@ class LoginViewController: UIViewController {
         }
         
         //Firebase login process
+        FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password) { (authResult, error) in
+            guard let result = authResult, error == nil else
+            {
+                print("Login failed")
+                return
+            }
+            
+            let user = result.user
+            print("Logged in user: \(user)")
+            self.navigationController?.pushViewController(ConversationsViewController(), animated: true)
+        }
     }
     
     private func AlertLoginError()

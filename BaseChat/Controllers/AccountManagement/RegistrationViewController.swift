@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class RegistrationViewController: UIViewController {
 
@@ -84,6 +85,7 @@ class RegistrationViewController: UIViewController {
         field.layer.borderWidth = 1
         field.layer.borderColor = UIColor.lightGray.cgColor
         field.placeholder = "email@provider.com"
+        field.keyboardType = .emailAddress
         
         //add a padding to the left
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
@@ -138,6 +140,9 @@ class RegistrationViewController: UIViewController {
         //Add target / function to buttons
         signUpButton.addTarget(self, action: #selector(DidTapSignUpButton), for: .touchUpInside)
         
+        //These are very important so that the textFieldShouldReturn() functions works
+        firstnameField.delegate = self
+        lastnameField.delegate = self
         emailField.delegate = self
         passwordField.delegate = self
         
@@ -222,26 +227,89 @@ class RegistrationViewController: UIViewController {
         }
         
         //Check if fields are filled out properly
-        guard let firstname = firstnameField.text,
+        /*guard let firstname = firstnameField.text,
               let lastname = lastnameField.text,
               let email = emailField.text,
               let password = passwordField.text,
               !firstname.isEmpty, !lastname.isEmpty, !email.isEmpty, !password.isEmpty, password.count >= 8 else
         {
-            AlertLoginError()
+            AlertError(0)
+            return
+        }*/
+        
+        var emptyFields = false
+        var passwordTooShort = false
+        let firstname = firstnameField.text
+        let lastname = lastnameField.text
+        let email = emailField.text
+        let password = passwordField.text
+        
+        if firstname!.isEmpty || lastname!.isEmpty || email!.isEmpty || password!.isEmpty
+        {
+            emptyFields = true
+        }
+        else if password!.count < 8
+        {
+            passwordTooShort = true
+        }
+        
+        guard !emptyFields, !passwordTooShort else
+        {
+            if emptyFields
+            {
+                AlertError(0)
+            }
+            else if passwordTooShort
+            {
+                AlertError(1)
+            }
             return
         }
         
-        //Firebase login process
+        //Firebase sign up process
+        FirebaseAuth.Auth.auth().createUser(withEmail: email!, password: password!) { (authResult, error) in
+            guard let result = authResult, error == nil else
+            {
+                print("Error while creating user")
+                return
+            }
+            
+            let user = result.user
+            print("Created user \(user)")
+            //return to login view controller
+            self.navigationController?.popToRootViewController(animated: true)
+        }
     }
     
-    private func AlertLoginError()
+    //Error code 0: Empty fields
+    //Error code 1: Password too short
+    private func AlertError(_ errorCode: Int) -> Void
     {
-        let alert = UIAlertController(title: "Empty fields", message: "Please fill in all fields to create a new account", preferredStyle: .alert)
+        var alertTitle: String = ""
+        var alertMessage: String = ""
+        
+        if errorCode == 0 //Not all fields are filled out
+        {
+            alertTitle = "Empty fields"
+            alertMessage = "Please fill in all fields"
+        }
+        else if errorCode == 1 //Password too short
+        {
+            alertTitle = "Password too short"
+            alertMessage = "Please enter a password that is at least 8 characters long"
+        }
+        
+        let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
         
         present(alert, animated: true, completion: nil)
+        
+        /*let alert = UIAlertController(title: "Empty fields", message: "Please fill in all fields to create a new account", preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+        
+        present(alert, animated: true, completion: nil)*/
     }
     
     @objc private func DidTapSignUp()
