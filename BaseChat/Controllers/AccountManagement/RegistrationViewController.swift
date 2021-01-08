@@ -19,7 +19,7 @@ class RegistrationViewController: UIViewController {
     
     private let profilePicture: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "person")
+        imageView.image = UIImage(systemName: "person.circle")
         imageView.tintColor = .gray
         imageView.contentMode = .scaleAspectFit
         
@@ -257,59 +257,55 @@ class RegistrationViewController: UIViewController {
         {
             if emptyFields
             {
-                AlertError(0)
+                AlertSignUpError()
             }
             else if passwordTooShort
             {
-                AlertError(1)
+                AlertSignUpError("Password too short", "Please enter a password that is at least 8 characters long")
             }
+            
             return
         }
         
         //Firebase sign up process
-        FirebaseAuth.Auth.auth().createUser(withEmail: email!, password: password!) { (authResult, error) in
-            guard let result = authResult, error == nil else
-            {
-                print("Error while creating user")
+        
+        //Check if user exists already
+        DatabaseManager.shared.UserExists(with: email!) { [weak self] (exists) in
+            guard let strongSelf = self else {
                 return
             }
             
-            let user = result.user
-            print("Created user \(user)")
-            //return to login view controller
-            self.navigationController?.popToRootViewController(animated: true)
+            guard !exists else {
+                strongSelf.AlertSignUpError("E-Mail address taken", "This E-Mail address is already taken for another account")
+                return
+            }
+            
+            //This creates a new user for authentication
+            FirebaseAuth.Auth.auth().createUser(withEmail: email!, password: password!) { (authResult, error) in
+                guard authResult != nil, error == nil else {
+                    print("Error while creating user")
+                    return
+                }
+               
+                //This inserts the user to a user database
+                DatabaseManager.shared.CreateNewUser(with: BaseChatUser(firstname: firstname!, lastname: lastname!, emailAddress: email!))
+               
+                //return to login view controller
+                strongSelf.navigationController?.popToRootViewController(animated: true)
+            }
         }
+        
+        
+        
     }
     
     //Error code 0: Empty fields
     //Error code 1: Password too short
-    private func AlertError(_ errorCode: Int) -> Void
+    private func AlertSignUpError(_ title: String = "Empty fields", _ message: String = "Please fill in all fields") -> Void
     {
-        var alertTitle: String = ""
-        var alertMessage: String = ""
-        
-        if errorCode == 0 //Not all fields are filled out
-        {
-            alertTitle = "Empty fields"
-            alertMessage = "Please fill in all fields"
-        }
-        else if errorCode == 1 //Password too short
-        {
-            alertTitle = "Password too short"
-            alertMessage = "Please enter a password that is at least 8 characters long"
-        }
-        
-        let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
-        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
-        
         present(alert, animated: true, completion: nil)
-        
-        /*let alert = UIAlertController(title: "Empty fields", message: "Please fill in all fields to create a new account", preferredStyle: .alert)
-        
-        alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
-        
-        present(alert, animated: true, completion: nil)*/
     }
     
     @objc private func DidTapSignUp()

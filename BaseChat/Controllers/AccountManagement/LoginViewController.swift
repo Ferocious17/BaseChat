@@ -46,7 +46,7 @@ class LoginViewController: UIViewController {
         //add a padding to the left
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = .white
+        //field.backgroundColor = .secondarySystemBackground
         
         return field
     }()
@@ -65,7 +65,8 @@ class LoginViewController: UIViewController {
         //add a padding to the left
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = .white
+        //field.backgroundColor = .white
+        field.attributedPlaceholder = NSAttributedString(string: "Password", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
         
         return field
     }()
@@ -111,7 +112,6 @@ class LoginViewController: UIViewController {
         view.addGestureRecognizer(dismissKeyboard)
         
         // title = "Log in"
-        view.backgroundColor = .white
         
         /*navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Sign up",
                                                             style: .done,
@@ -208,25 +208,33 @@ class LoginViewController: UIViewController {
         }
         
         //Firebase login process
-        FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password) { (authResult, error) in
+        FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password) { [weak self] (authResult, error) in
+            
+            guard let strongSelf = self else
+            {
+                return
+            }
+            
             guard let result = authResult, error == nil else
             {
                 print("Login failed")
+                print(error)
                 return
             }
             
             let user = result.user
             print("Logged in user: \(user)")
-            self.navigationController?.pushViewController(ConversationsViewController(), animated: true)
+            strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+            //strongSelf.navigationController?.pushViewController(ConversationsViewController(), animated: true)
         }
     }
     
-    private func AlertLoginError()
+    //Error code 0: Empty fields
+    //Error code 1: Missing internet connection
+    private func AlertLoginError(_ title: String = "Empty fields", _ message: String = "Please fill in all fields")
     {
-        let alert = UIAlertController(title: "Empty fields", message: "Please fill in all fields for login", preferredStyle: .alert)
-        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
-        
         present(alert, animated: true, completion: nil)
     }
     

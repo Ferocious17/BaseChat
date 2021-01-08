@@ -26,6 +26,9 @@
 		F135207A25A73E4B007A35A6 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F135207925A73E4B007A35A6 /* SettingsViewController.swift */; };
 		F135208325A746AF007A35A6 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F135208225A746AF007A35A6 /* Extensions.swift */; };
 		F153C94925A861B800350FBD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F153C94825A861B800350FBD /* GoogleService-Info.plist */; };
+		F1B50D8D25A88DCF00A91972 /* Monitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B50D8C25A88DCF00A91972 /* Monitor.swift */; };
+		F1B50D9525A891F600A91972 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B50D9425A891F600A91972 /* DatabaseManager.swift */; };
+		F1B50D9A25A8946200A91972 /* BaseChatUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B50D9925A8946200A91972 /* BaseChatUser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +80,9 @@
 		F135207925A73E4B007A35A6 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		F135208225A746AF007A35A6 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		F153C94825A861B800350FBD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F1B50D8C25A88DCF00A91972 /* Monitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monitor.swift; sourceTree = "<group>"; };
+		F1B50D9425A891F600A91972 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
+		F1B50D9925A8946200A91972 /* BaseChatUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseChatUser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +148,7 @@
 		F135202025A73727007A35A6 /* BaseChat */ = {
 			isa = PBXGroup;
 			children = (
+				F1B50D8B25A88DB500A91972 /* Network */,
 				F153C94825A861B800350FBD /* GoogleService-Info.plist */,
 				F135205825A73A60007A35A6 /* Resources */,
 				F135205725A73A53007A35A6 /* ViewModels */,
@@ -213,6 +220,8 @@
 				F135202125A73727007A35A6 /* AppDelegate.swift */,
 				F135202325A73727007A35A6 /* SceneDelegate.swift */,
 				F135208225A746AF007A35A6 /* Extensions.swift */,
+				F1B50D9425A891F600A91972 /* DatabaseManager.swift */,
+				F1B50D9925A8946200A91972 /* BaseChatUser.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -233,6 +242,14 @@
 				F135206525A73DA3007A35A6 /* RegistrationViewController.swift */,
 			);
 			path = AccountManagement;
+			sourceTree = "<group>";
+		};
+		F1B50D8B25A88DB500A91972 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				F1B50D8C25A88DCF00A91972 /* Monitor.swift */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 		F5A782B19366DA9F8D62240B /* Pods */ = {
@@ -488,12 +505,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				F135207025A73DE4007A35A6 /* VideoPlayerController.swift in Sources */,
+				F1B50D8D25A88DCF00A91972 /* Monitor.swift in Sources */,
 				F135206125A73D5B007A35A6 /* LoginViewController.swift in Sources */,
 				F135207525A73E27007A35A6 /* NewConversationViewController.swift in Sources */,
 				F135202625A73727007A35A6 /* ConversationsViewController.swift in Sources */,
 				F135206B25A73DB4007A35A6 /* PhotoViewerController.swift in Sources */,
 				F135208325A746AF007A35A6 /* Extensions.swift in Sources */,
+				F1B50D9A25A8946200A91972 /* BaseChatUser.swift in Sources */,
 				F135202225A73727007A35A6 /* AppDelegate.swift in Sources */,
+				F1B50D9525A891F600A91972 /* DatabaseManager.swift in Sources */,
 				F135202425A73727007A35A6 /* SceneDelegate.swift in Sources */,
 				F135206625A73DA3007A35A6 /* RegistrationViewController.swift in Sources */,
 				F135207A25A73E4B007A35A6 /* SettingsViewController.swift in Sources */,
