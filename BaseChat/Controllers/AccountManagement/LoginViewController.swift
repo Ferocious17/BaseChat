@@ -7,9 +7,12 @@
 
 import UIKit
 import FirebaseAuth
+import JGProgressHUD
 
 class LoginViewController: UIViewController {
 
+    private let spinner = JGProgressHUD(style: .dark)
+    
     //Create scroll view so elements can accessed on smaller screens
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -106,6 +109,7 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+        view.backgroundColor = .white
         
         //make the keyboard disappear if user taps on empty space on screen
         let dismissKeyboard = UITapGestureRecognizer(target: self, action: #selector(DismissKeyboard))
@@ -142,6 +146,7 @@ class LoginViewController: UIViewController {
     //because it is there in the sign up screen it doesn't hide again in the sign in screen when you go back
     //because it is only called when view the view loads (viewDidLoad)
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         self.navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
@@ -150,6 +155,7 @@ class LoginViewController: UIViewController {
         super.viewDidLayoutSubviews()
         scrollView.frame = view.bounds
         let size = view.width / 3
+        let width = scrollView.width-60
         logo.frame = CGRect(x: (scrollView.width-size)/2,
                             y: 30,
                             width: size,
@@ -157,32 +163,32 @@ class LoginViewController: UIViewController {
         
         titleLabel.frame = CGRect(x: 30,
                                   y: logo.bottom+10,
-                                  width: scrollView.width-60,
+                                  width: width,
                                   height: 40)
         
         emailField.frame = CGRect(x: 30,
                                   y: titleLabel.bottom+15,
-                                  width: scrollView.width-60,
+                                  width: width,
                                   height: 52)
         
         passwordField.frame = CGRect(x: 30,
                                      y: emailField.bottom+15,
-                                     width: scrollView.width-60,
+                                     width: width,
                                      height: 52)
         
         loginButton.frame = CGRect(x: 30,
                                    y: passwordField.bottom+15,
-                                   width: scrollView.width-60,
+                                   width: width,
                                    height: 52)
         
         noAccountLabel.frame = CGRect(x: 30,
                                    y: loginButton.bottom+20,
-                                   width: scrollView.width-60,
+                                   width: width,
                                    height: 52)
         
         signUpButton.frame = CGRect(x: 30,
                                    y: noAccountLabel.bottom+20,
-                                   width: scrollView.width-60,
+                                   width: width,
                                    height: 52)
     }
     
@@ -207,12 +213,19 @@ class LoginViewController: UIViewController {
             return
         }
         
+        spinner.show(in: view)
+        
         //Firebase login process
         FirebaseAuth.Auth.auth().signIn(withEmail: email, password: password) { [weak self] (authResult, error) in
             
             guard let strongSelf = self else
             {
                 return
+            }
+            
+            DispatchQueue.main.async
+            {
+                strongSelf.spinner.dismiss()
             }
             
             guard let result = authResult, error == nil else

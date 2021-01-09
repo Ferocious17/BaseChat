@@ -29,6 +29,9 @@
 		F1B50D8D25A88DCF00A91972 /* Monitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B50D8C25A88DCF00A91972 /* Monitor.swift */; };
 		F1B50D9525A891F600A91972 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B50D9425A891F600A91972 /* DatabaseManager.swift */; };
 		F1B50D9A25A8946200A91972 /* BaseChatUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B50D9925A8946200A91972 /* BaseChatUser.swift */; };
+		F1ED01D425A921B200B7A6F2 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1ED01D325A921B200B7A6F2 /* ChatViewController.swift */; };
+		F1ED01DE25A926F400B7A6F2 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1ED01DD25A926F400B7A6F2 /* Message.swift */; };
+		F1ED01E625A9277400B7A6F2 /* Sender.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1ED01E525A9277400B7A6F2 /* Sender.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,6 +86,9 @@
 		F1B50D8C25A88DCF00A91972 /* Monitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monitor.swift; sourceTree = "<group>"; };
 		F1B50D9425A891F600A91972 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		F1B50D9925A8946200A91972 /* BaseChatUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseChatUser.swift; sourceTree = "<group>"; };
+		F1ED01D325A921B200B7A6F2 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		F1ED01DD25A926F400B7A6F2 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		F1ED01E525A9277400B7A6F2 /* Sender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sender.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,6 +193,7 @@
 				F135206F25A73DE4007A35A6 /* VideoPlayerController.swift */,
 				F135207425A73E27007A35A6 /* NewConversationViewController.swift */,
 				F135207925A73E4B007A35A6 /* SettingsViewController.swift */,
+				F1ED01D325A921B200B7A6F2 /* ChatViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -222,6 +229,8 @@
 				F135208225A746AF007A35A6 /* Extensions.swift */,
 				F1B50D9425A891F600A91972 /* DatabaseManager.swift */,
 				F1B50D9925A8946200A91972 /* BaseChatUser.swift */,
+				F1ED01DD25A926F400B7A6F2 /* Message.swift */,
+				F1ED01E525A9277400B7A6F2 /* Sender.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -512,9 +521,12 @@
 				F135206B25A73DB4007A35A6 /* PhotoViewerController.swift in Sources */,
 				F135208325A746AF007A35A6 /* Extensions.swift in Sources */,
 				F1B50D9A25A8946200A91972 /* BaseChatUser.swift in Sources */,
+				F1ED01E625A9277400B7A6F2 /* Sender.swift in Sources */,
 				F135202225A73727007A35A6 /* AppDelegate.swift in Sources */,
 				F1B50D9525A891F600A91972 /* DatabaseManager.swift in Sources */,
+				F1ED01D425A921B200B7A6F2 /* ChatViewController.swift in Sources */,
 				F135202425A73727007A35A6 /* SceneDelegate.swift in Sources */,
+				F1ED01DE25A926F400B7A6F2 /* Message.swift in Sources */,
 				F135206625A73DA3007A35A6 /* RegistrationViewController.swift in Sources */,
 				F135207A25A73E4B007A35A6 /* SettingsViewController.swift in Sources */,
 			);

@@ -7,9 +7,12 @@
 
 import UIKit
 import FirebaseAuth
+import JGProgressHUD
 
 class RegistrationViewController: UIViewController {
 
+    private let spinner = JGProgressHUD(style: .dark)
+    
     //Create scroll view so elements can accessed on smaller screens
     private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -168,6 +171,7 @@ class RegistrationViewController: UIViewController {
         super.viewDidLayoutSubviews()
         scrollView.frame = view.bounds
         let size = view.width / 3
+        let width = scrollView.width-60
         
         profilePicture.frame = CGRect(x: (scrollView.width-size)/2,
                             y: 30,
@@ -182,27 +186,27 @@ class RegistrationViewController: UIViewController {
         
         firstnameField.frame = CGRect(x: 30,
                                       y: profilePicture.bottom+30,
-                                      width: scrollView.width-60,
+                                      width: width,
                                       height: 52)
         
         lastnameField.frame = CGRect(x: 30,
                                      y: firstnameField.bottom+15,
-                                     width: scrollView.width-60,
+                                     width: width,
                                      height: 52)
         
         emailField.frame = CGRect(x: 30,
                                   y: lastnameField.bottom+15,
-                                  width: scrollView.width-60,
+                                  width: width,
                                   height: 52)
         
         passwordField.frame = CGRect(x: 30,
                                      y: emailField.bottom+15,
-                                     width: scrollView.width-60,
+                                     width: width,
                                      height: 52)
         
         signUpButton.frame = CGRect(x: 30,
                                    y: passwordField.bottom+15,
-                                   width: scrollView.width-60,
+                                   width: width,
                                    height: 52)
     }
     
@@ -270,7 +274,7 @@ class RegistrationViewController: UIViewController {
         //Firebase sign up process
         
         //Check if user exists already
-        DatabaseManager.shared.UserExists(with: email!) { [weak self] (exists) in
+        /*DatabaseManager.shared.UserExists(with: email!) { [weak self] (exists) in
             guard let strongSelf = self else {
                 return
             }
@@ -293,10 +297,39 @@ class RegistrationViewController: UIViewController {
                 //return to login view controller
                 strongSelf.navigationController?.popToRootViewController(animated: true)
             }
+        }*/
+        
+        spinner.show(in: view)
+        
+        DatabaseManager.shared.UserExists(with: email!) { (exists) in
+            
+            print(exists)
+            
+            DispatchQueue.main.async
+            {
+                self.spinner.dismiss()
+            }
+            
+            if !exists
+            {
+                //Creates new user for authentication
+                FirebaseAuth.Auth.auth().createUser(withEmail: email!, password: password!) { (authResult, error) in
+                    guard authResult != nil, error == nil else
+                    {
+                        print("Error while creating user")
+                        return
+                    }
+                    
+                    //Creates new record in user database
+                    //Not to be interchanged with the step above!
+                    DatabaseManager.shared.CreateNewUser(with: BaseChatUser(firstname: firstname!, lastname: lastname!, emailAddress: email!))
+                }
+            }
+            else
+            {
+                self.AlertSignUpError("E-Mail address taken", "This e-mail address is already taken by another user")
+            }
         }
-        
-        
-        
     }
     
     //Error code 0: Empty fields

@@ -7,9 +7,20 @@ target 'BaseChat' do
 
   # Pods for BaseChat
 
+# Firebase
 pod 'Firebase/Core'
 pod 'Firebase/Auth'
 pod 'Firebase/Database'
+
+#UI
+pod 'MessageKit'
+pod 'JGProgressHUD'
+
+# Local database for cache
+pod 'RealmSwift'
+
+# Image loading
+pod 'SDWebImage'
 
   target 'BaseChatTests' do
     inherit! :search_paths
