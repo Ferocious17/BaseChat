@@ -231,11 +231,20 @@ class LoginViewController: UIViewController {
             guard let result = authResult, error == nil else
             {
                 print("Login failed")
-                print(error)
+                print(error!)
+                
+                strongSelf.AlertLoginError("Login failed", "Login failed. Please try again later")
+                
                 return
             }
             
+            
+            
             let user = result.user
+            
+            //Cache e-mail address
+            UserDefaults.standard.setValue(email, forKey: "email")
+            
             print("Logged in user: \(user)")
             strongSelf.navigationController?.dismiss(animated: true, completion: nil)
             //strongSelf.navigationController?.pushViewController(ConversationsViewController(), animated: true)

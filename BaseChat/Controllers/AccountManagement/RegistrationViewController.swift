@@ -213,70 +213,37 @@ class RegistrationViewController: UIViewController {
     @objc private func DidTapSignUpButton()
     {
         //Get rid of the keyboard
-        if firstnameField.isFirstResponder
-        {
-            firstnameField.resignFirstResponder()
-        }
-        else if lastnameField.isFirstResponder
-        {
-            lastnameField.resignFirstResponder()
-        }
-        else if emailField.isFirstResponder
-        {
-            emailField.resignFirstResponder()
-        }
-        else if passwordField.isFirstResponder
-        {
-            passwordField.resignFirstResponder()
-        }
+        firstnameField.resignFirstResponder()
+        lastnameField.resignFirstResponder()
+        emailField.resignFirstResponder()
+        passwordField.resignFirstResponder()
         
         //Check if fields are filled out properly
-        /*guard let firstname = firstnameField.text,
+        guard let firstname = firstnameField.text,
               let lastname = lastnameField.text,
               let email = emailField.text,
               let password = passwordField.text,
-              !firstname.isEmpty, !lastname.isEmpty, !email.isEmpty, !password.isEmpty, password.count >= 8 else
-        {
-            AlertError(0)
-            return
-        }*/
-        
-        var emptyFields = false
-        var passwordTooShort = false
-        let firstname = firstnameField.text
-        let lastname = lastnameField.text
-        let email = emailField.text
-        let password = passwordField.text
-        
-        if firstname!.isEmpty || lastname!.isEmpty || email!.isEmpty || password!.isEmpty
-        {
-            emptyFields = true
-        }
-        else if password!.count < 8
-        {
-            passwordTooShort = true
-        }
-        
-        guard !emptyFields, !passwordTooShort else
-        {
-            if emptyFields
-            {
-                AlertSignUpError()
-            }
-            else if passwordTooShort
-            {
-                AlertSignUpError("Password too short", "Please enter a password that is at least 8 characters long")
-            }
-            
+              !firstname.isEmpty,
+              !lastname.isEmpty,
+              !email.isEmpty,
+              !password.isEmpty,
+              password.count >= 8 else {
+            AlertSignUpError()
             return
         }
-        
+
         //Firebase sign up process
+        spinner.show(in: view)
         
         //Check if user exists already
-        /*DatabaseManager.shared.UserExists(with: email!) { [weak self] (exists) in
+        DatabaseManager.shared.UserExists(with: email) { [weak self] (exists) in
             guard let strongSelf = self else {
                 return
+            }
+            
+            DispatchQueue.main.async
+            {
+                strongSelf.spinner.dismiss()
             }
             
             guard !exists else {
@@ -285,21 +252,42 @@ class RegistrationViewController: UIViewController {
             }
             
             //This creates a new user for authentication
-            FirebaseAuth.Auth.auth().createUser(withEmail: email!, password: password!) { (authResult, error) in
+            FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password) { (authResult, error) in
                 guard authResult != nil, error == nil else {
                     print("Error while creating user")
                     return
                 }
                
                 //This inserts the user to a user database
-                DatabaseManager.shared.CreateNewUser(with: BaseChatUser(firstname: firstname!, lastname: lastname!, emailAddress: email!))
+                let chatUser = BaseChatUser(firstname: firstname, lastname: lastname, emailAddress: email)
+                DatabaseManager.shared.CreateNewUser(with: chatUser) { (success) in
+                    if success
+                    {
+                        guard let image = strongSelf.profilePicture.image, let data = image.pngData() else
+                        {
+                            return
+                        }
+                        
+                        let fileName = chatUser.profilePicutreFileName
+                        StorageManager.shared.UploadProfilePicture(with: data, fileName: fileName) { (result) in
+                            switch result
+                            {
+                            case .success(let downloadURL):
+                                UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
+                                print(downloadURL)
+                            case .failure(let error):
+                                print(error)
+                            }
+                        }
+                    }
+                }
                
                 //return to login view controller
                 strongSelf.navigationController?.popToRootViewController(animated: true)
             }
-        }*/
+        }
         
-        spinner.show(in: view)
+        /*spinner.show(in: view)
         
         DatabaseManager.shared.UserExists(with: email!) { (exists) in
             
@@ -322,14 +310,35 @@ class RegistrationViewController: UIViewController {
                     
                     //Creates new record in user database
                     //Not to be interchanged with the step above!
-                    DatabaseManager.shared.CreateNewUser(with: BaseChatUser(firstname: firstname!, lastname: lastname!, emailAddress: email!))
+                    let chatUser = BaseChatUser(firstname: firstname!, lastname: lastname!, emailAddress: email!)
+                    DatabaseManager.shared.CreateNewUser(with: chatUser) { (success) in
+                        if success
+                        {
+                            guard let image = self.profilePicture.image, let data = image.pngData() else
+                            {
+                                return
+                            }
+                            
+                            let fileName = chatUser.profilePicutreFileName
+                            StorageManager.shared.UploadProfilePicture(with: data, fileName: fileName) { (result) in
+                                switch result
+                                {
+                                case .success(let downloadURL):
+                                    UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
+                                    print(downloadURL)
+                                case .failure(let error):
+                                    print(error)
+                                }
+                            }
+                        }
+                    }
                 }
             }
             else
             {
                 self.AlertSignUpError("E-Mail address taken", "This e-mail address is already taken by another user")
             }
-        }
+        }*/
     }
     
     //Error code 0: Empty fields

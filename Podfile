@@ -12,6 +12,9 @@ pod 'Firebase/Core'
 pod 'Firebase/Auth'
 pod 'Firebase/Database'
 
+# Firebase Photo Upload
+pod 'Firebase/Storage'
+
 #UI
 pod 'MessageKit'
 pod 'JGProgressHUD'
