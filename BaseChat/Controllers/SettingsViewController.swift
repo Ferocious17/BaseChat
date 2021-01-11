@@ -91,7 +91,7 @@ class SettingsViewController: UIViewController {
         }.resume()
     }
     
-    private func LoadProfilePicture()
+    public func LoadProfilePicture()
     {
         //get the email address of the current user from cache
         guard let email = UserDefaults.standard.value(forKey: "email") as? String else
@@ -103,7 +103,7 @@ class SettingsViewController: UIViewController {
         let fileName = safeEmail + "_profile_picture.png"
         let path = "images/"+fileName
         
-        StorageManager.shared.DowndloadURL(for: path) { [weak self] (result) in
+        StorageManager.shared.DownloadURL(for: path) { [weak self] (result) in
             switch result
             {
             case .success(let url):

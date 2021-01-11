@@ -10,6 +10,8 @@ import JGProgressHUD
 
 class NewConversationViewController: UIViewController {
 
+    public var completion: (([String:String]) -> (Void))?
+    
     private let spinner = JGProgressHUD(style: .dark)
     
     //Firebase results --> Used to improve performance and save searched users
@@ -99,6 +101,11 @@ extension NewConversationViewController: UITableViewDelegate, UITableViewDataSou
     //start conversation
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        //start the conversation
+        let targetUserData = results[indexPath.row]
+        dismiss(animated: true) { [weak self] in
+            self?.completion?(targetUserData)
+        }
     }
 }
 

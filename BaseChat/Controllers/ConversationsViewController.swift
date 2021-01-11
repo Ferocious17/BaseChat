@@ -10,7 +10,6 @@ import FirebaseAuth
 import JGProgressHUD
 
 // Controller that gets loaded initially
-
 class ConversationsViewController: UIViewController {
 
     private let spinner = JGProgressHUD(style: .dark)
@@ -57,8 +56,25 @@ class ConversationsViewController: UIViewController {
     @objc func DidTapCompose()
     {
         let viewController = NewConversationViewController()
+        viewController.completion = { [weak self] result in
+            //print("\(result)")
+            self?.CreateNewConversation(result: result)
+        }
         let navViewController = UINavigationController(rootViewController: viewController)
         present(navViewController, animated: true, completion: nil)
+    }
+    
+    private func CreateNewConversation(result: [String:String])
+    {
+        guard let name = result["name"], let email = result["email"] else {
+            return
+        }
+        
+        let viewController = ChatViewController(with: email)
+        viewController.isNewConversation = true
+        viewController.title = name
+        viewController.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(viewController, animated: true)
     }
     
     private func ValidateAuthentication()
@@ -103,7 +119,7 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let viewController = ChatViewController()
+        let viewController = ChatViewController(with: "test")
         viewController.title = "User name"
         viewController.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(viewController, animated: true)

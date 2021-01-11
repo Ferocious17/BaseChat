@@ -54,7 +54,7 @@ final class StorageManager
         }
     }
     
-    public func DowndloadURL(for path: String, completion: @escaping DownloadProfilePictureCompletion)
+    public func DownloadURL(for path: String, completion: @escaping DownloadProfilePictureCompletion)
     {
         let reference = storage.child(path)
         
