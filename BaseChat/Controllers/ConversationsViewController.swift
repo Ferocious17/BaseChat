@@ -14,10 +14,12 @@ class ConversationsViewController: UIViewController {
 
     private let spinner = JGProgressHUD(style: .dark)
     
+    private var conversations = [Conversation]()
+    
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.isHidden = true
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(ConversationTableViewCell.self, forCellReuseIdentifier: ConversationTableViewCell.identifier)
         return tableView
     }()
     
@@ -38,6 +40,7 @@ class ConversationsViewController: UIViewController {
         view.addSubview(noConversationsLabel)
         SetupTableView()
         FetchConversations()
+        StartListeningForConversations()
     }
 
     override func viewDidAppear(_ animated: Bool)
@@ -51,6 +54,33 @@ class ConversationsViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         tableView.frame = view.bounds
+    }
+    
+    private func StartListeningForConversations()
+    {
+        guard let email = UserDefaults.standard.value(forKeyPath: "email") as? String else {
+            return
+        }
+        
+        let safeEmail = DatabaseManager.SafeEmail(email: email)
+        DatabaseManager.shared.GetAllConversations(for: safeEmail) { [weak self] (result) in
+            switch result
+            {
+            case .success(let conversations):
+                guard !conversations.isEmpty else {
+                    return
+                }
+                
+                self?.conversations = conversations
+                DispatchQueue.main.async
+                {
+                    self?.tableView.reloadData()
+                }
+                
+            case .failure(let error):
+                print("Failed to get all conversations: \(error)")
+            }
+        }
     }
     
     @objc func DidTapCompose()
@@ -70,7 +100,8 @@ class ConversationsViewController: UIViewController {
             return
         }
         
-        let viewController = ChatViewController(with: email)
+        //Nil for conversationID because has no ID yet since it is being created now
+        let viewController = ChatViewController(with: email, id: nil)
         viewController.isNewConversation = true
         viewController.title = name
         viewController.navigationItem.largeTitleDisplayMode = .never
@@ -106,23 +137,31 @@ class ConversationsViewController: UIViewController {
 extension ConversationsViewController: UITableViewDelegate, UITableViewDataSource
 {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return conversations.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = "Cell Prototype"
+        let model = conversations[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.identifier, for: indexPath) as! ConversationTableViewCell
+        //cell.textLabel?.text = "Cell Prototype"
         cell.accessoryType = .disclosureIndicator
+        cell.Configure(with: model)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let model = conversations[indexPath.row]
         
-        let viewController = ChatViewController(with: "test")
-        viewController.title = "User name"
+        let viewController = ChatViewController(with: model.otherUserEmail, id: model.id)
+        viewController.title = model.name
         viewController.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        //print("View height: \(view.height)")
+        return view.height/9.3
     }
 }
 

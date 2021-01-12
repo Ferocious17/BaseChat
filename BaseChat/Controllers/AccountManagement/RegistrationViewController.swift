@@ -56,7 +56,7 @@ class RegistrationViewController: UIViewController {
         //add a padding to the left
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = .white
+        //field.backgroundColor = .white
         
         return field
     }()
@@ -74,7 +74,7 @@ class RegistrationViewController: UIViewController {
         //add a padding to the left
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = .white
+        //field.backgroundColor = .white
         
         return field
     }()
@@ -93,7 +93,7 @@ class RegistrationViewController: UIViewController {
         //add a padding to the left
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = .white
+        //field.backgroundColor = .white
         
         return field
     }()
@@ -112,7 +112,7 @@ class RegistrationViewController: UIViewController {
         //add a padding to the left
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         field.leftViewMode = .always
-        field.backgroundColor = .white
+        //field.backgroundColor = .white
         
         return field
     }()
@@ -138,9 +138,9 @@ class RegistrationViewController: UIViewController {
         view.addGestureRecognizer(dismissKeyboard)
         
         title = "Sign up"
-        view.backgroundColor = .white
+        //view.backgroundColor = .white
         
-        //Add target / function to buttons
+        //Add target / function to buttons$
         signUpButton.addTarget(self, action: #selector(DidTapSignUpButton), for: .touchUpInside)
         
         //These are very important so that the textFieldShouldReturn() functions works

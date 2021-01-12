@@ -69,7 +69,7 @@ class LoginViewController: UIViewController {
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         field.leftViewMode = .always
         //field.backgroundColor = .white
-        field.attributedPlaceholder = NSAttributedString(string: "Password", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
+        //field.attributedPlaceholder = NSAttributedString(string: "Password", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
         
         return field
     }()
@@ -109,7 +109,7 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-        view.backgroundColor = .white
+        //view.backgroundColor = .white
         
         //make the keyboard disappear if user taps on empty space on screen
         let dismissKeyboard = UITapGestureRecognizer(target: self, action: #selector(DismissKeyboard))
