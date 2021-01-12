@@ -19,7 +19,7 @@ struct BaseChatUser
         return email
     }
     
-    var profilePicutreFileName: String {
+    var profilePictureFileName: String {
         return "\(safeEmail)_profile_picture.png"
     }
 }

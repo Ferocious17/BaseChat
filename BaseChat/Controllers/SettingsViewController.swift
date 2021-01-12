@@ -168,6 +168,29 @@ extension SettingsViewController: UIImagePickerControllerDelegate, UINavigationC
         }
         
         self.profilePicture.image = selectedImage
+        UpdateProfilePicture()
+    }
+    
+    private func UpdateProfilePicture()
+    {
+        guard let image = self.profilePicture.image,
+              let data = image.pngData(),
+              let email = UserDefaults.standard.value(forKey: "email") as? String else {
+            return
+        }
+        
+        let safeEmail = DatabaseManager.SafeEmail(email: email)
+        let fileName = "\(safeEmail)_profile_picture.png"
+        StorageManager.shared.UploadProfilePicture(with: data, fileName: fileName) { (result) in
+            switch result
+            {
+            case .success(let downloadURL):
+                UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
+                print(downloadURL)
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController)

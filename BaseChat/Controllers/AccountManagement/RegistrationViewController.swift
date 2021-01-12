@@ -268,7 +268,7 @@ class RegistrationViewController: UIViewController {
                             return
                         }
                         
-                        let fileName = chatUser.profilePicutreFileName
+                        let fileName = chatUser.profilePictureFileName
                         StorageManager.shared.UploadProfilePicture(with: data, fileName: fileName) { (result) in
                             switch result
                             {
