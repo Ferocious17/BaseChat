@@ -138,7 +138,7 @@ class RegistrationViewController: UIViewController {
         view.addGestureRecognizer(dismissKeyboard)
         
         title = "Sign up"
-        //view.backgroundColor = .white
+        view.backgroundColor = .white
         
         //Add target / function to buttons$
         signUpButton.addTarget(self, action: #selector(DidTapSignUpButton), for: .touchUpInside)

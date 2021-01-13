@@ -10,6 +10,8 @@ import FirebaseAuth
 
 class SettingsViewController: UIViewController {
 
+    //public static let shared = SettingsViewController()
+    
     private let profilePicture: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "person.circle")
@@ -44,7 +46,6 @@ class SettingsViewController: UIViewController {
         profilePicture.isUserInteractionEnabled = true
         let gesture = UITapGestureRecognizer(target: self, action: #selector(DidTapChangeProfilePicture))
         profilePicture.addGestureRecognizer(gesture)
-        LoadProfilePicture()
     }
     
     override func viewDidAppear(_ animated: Bool)
@@ -53,6 +54,7 @@ class SettingsViewController: UIViewController {
         /*let imagePNGData = UserDefaults.standard.data(forKey: "profilePictureData")
         let optionalImagePNGData = UIImage(systemName: "person.circle")?.pngData()
         profilePicture.image = UIImage(data: (imagePNGData ?? optionalImagePNGData)!)*/
+        LoadProfilePicture()
     }
     
     override func viewDidLayoutSubviews()

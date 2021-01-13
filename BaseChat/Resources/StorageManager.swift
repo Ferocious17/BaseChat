@@ -24,11 +24,11 @@ final class StorageManager
      /images/caner-kaya2003-outlook-com_profile_picture.png
      */
     
-    public typealias UploadProfilePictureCompletion = (Result<String, Error>) -> Void
-    public typealias DownloadProfilePictureCompletion = (Result<URL, Error>) -> Void
+    public typealias UploadMediaCompletion = (Result<String, Error>) -> Void
+    public typealias DownloadMediaCompletion = (Result<URL, Error>) -> Void
     
     // Uploads picked profile picture to firebase storage and returns completion with URL string to download
-    public func UploadProfilePicture(with data: Data, fileName: String, completion: @escaping UploadProfilePictureCompletion)
+    public func UploadProfilePicture(with data: Data, fileName: String, completion: @escaping UploadMediaCompletion)
     {
         storage.child("images/\(fileName)").putData(data, metadata: nil) { (metadata, error) in
             guard error == nil else
@@ -54,7 +54,61 @@ final class StorageManager
         }
     }
     
-    public func DownloadURL(for path: String, completion: @escaping DownloadProfilePictureCompletion)
+    ///Uploads image which will be sent to a conversation
+    public func UploadMessagePhoto(with data: Data, fileName: String, completion: @escaping UploadMediaCompletion)
+    {
+        storage.child("message_images/\(fileName)").putData(data, metadata: nil) { [weak self] (metadata, error) in
+            guard error == nil else
+            {
+                //failed
+                print("Failed to upload picture")
+                completion(.failure(StorageError.FailedToUpload))
+                return
+            }
+            
+            self?.storage.child("message_images/\(fileName)").downloadURL { (url, error) in
+                guard let url = url else
+                {
+                    print("Failed to get download URL")
+                    completion(.failure(StorageError.FailedToGetDownloadURL))
+                    return
+                }
+                
+                let URLString = url.absoluteString
+                print("Download URL: \(URLString)")
+                completion(.success(URLString))
+            }
+        }
+    }
+    
+    ///Uploads video which will be sent to a conversation
+    public func UploadMessageVideo(with fileURL: URL, fileName: String, completion: @escaping UploadMediaCompletion)
+    {
+        storage.child("message_videos/\(fileName)").putFile(from: fileURL, metadata: nil) { [weak self] (metadata, error) in
+            guard error == nil else
+            {
+                //failed
+                print("Failed to upload video")
+                completion(.failure(StorageError.FailedToUpload))
+                return
+            }
+            
+            self?.storage.child("message_videos/\(fileName)").downloadURL { (url, error) in
+                guard let url = url else
+                {
+                    print("Failed to get download URL")
+                    completion(.failure(StorageError.FailedToGetDownloadURL))
+                    return
+                }
+                
+                let URLString = url.absoluteString
+                print("Download URL: \(URLString)")
+                completion(.success(URLString))
+            }
+        }
+    }
+    
+    public func DownloadURL(for path: String, completion: @escaping DownloadMediaCompletion)
     {
         let reference = storage.child(path)
         

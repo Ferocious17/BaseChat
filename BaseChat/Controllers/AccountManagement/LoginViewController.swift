@@ -22,7 +22,7 @@ class LoginViewController: UIViewController {
     
     private let logo: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "BaseChatLogo")
+        imageView.image = UIImage(named: "BaseChat_Logo")
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
@@ -109,7 +109,7 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-        //view.backgroundColor = .white
+        view.backgroundColor = .white
         
         //make the keyboard disappear if user taps on empty space on screen
         let dismissKeyboard = UITapGestureRecognizer(target: self, action: #selector(DismissKeyboard))
@@ -241,7 +241,25 @@ class LoginViewController: UIViewController {
             
             
             let user = result.user
-            
+            let safeEmail = DatabaseManager.SafeEmail(email: email)
+            DatabaseManager.shared.GetFirstLastname(for: safeEmail) { (result) in
+                switch result
+                {
+                case .success(let data):
+                    guard let userData = data as? [String:Any],
+                          let firstname = userData["first_name"],
+                          let lastname = userData["last_name"] else
+                    {
+                        return
+                    }
+                    
+                    //Cache first and last name of user
+                    UserDefaults.standard.setValue("\(firstname) \(lastname)", forKey: "name")
+                    
+                case .failure(let error):
+                    print("Failed to get data: \(error)")
+                }
+            }
             //Cache e-mail address
             UserDefaults.standard.setValue(email, forKey: "email")
             
