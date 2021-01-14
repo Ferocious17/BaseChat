@@ -25,7 +25,10 @@
 		F135207525A73E27007A35A6 /* NewConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F135207425A73E27007A35A6 /* NewConversationViewController.swift */; };
 		F135207A25A73E4B007A35A6 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F135207925A73E4B007A35A6 /* SettingsViewController.swift */; };
 		F135208325A746AF007A35A6 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F135208225A746AF007A35A6 /* Extensions.swift */; };
+		F149584525B0701C0094864D /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F149584425B0701C0094864D /* SearchResultCell.swift */; };
+		F149584A25B070AA0094864D /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = F149584925B070AA0094864D /* SearchResult.swift */; };
 		F153C94925A861B800350FBD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F153C94825A861B800350FBD /* GoogleService-Info.plist */; };
+		F165F45725B04E4D00F9F996 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = F165F45625B04E4D00F9F996 /* Color.swift */; };
 		F181C4AA25A9FA90003870D1 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F181C4A925A9FA90003870D1 /* StorageManager.swift */; };
 		F196F70925AEFFA600DD5305 /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = F196F70825AEFFA600DD5305 /* Media.swift */; };
 		F1B2B71025AE1DED006E3814 /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B2B70F25AE1DED006E3814 /* ConversationTableViewCell.swift */; };
@@ -33,6 +36,7 @@
 		F1B50D8D25A88DCF00A91972 /* Monitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B50D8C25A88DCF00A91972 /* Monitor.swift */; };
 		F1B50D9525A891F600A91972 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B50D9425A891F600A91972 /* DatabaseManager.swift */; };
 		F1B50D9A25A8946200A91972 /* BaseChatUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B50D9925A8946200A91972 /* BaseChatUser.swift */; };
+		F1C3EBFF25B04307000AC8CC /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1C3EBFE25B04307000AC8CC /* EditProfileViewController.swift */; };
 		F1ED01D425A921B200B7A6F2 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1ED01D325A921B200B7A6F2 /* ChatViewController.swift */; };
 		F1ED01DE25A926F400B7A6F2 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1ED01DD25A926F400B7A6F2 /* Message.swift */; };
 		F1ED01E625A9277400B7A6F2 /* Sender.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1ED01E525A9277400B7A6F2 /* Sender.swift */; };
@@ -86,7 +90,10 @@
 		F135207425A73E27007A35A6 /* NewConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationViewController.swift; sourceTree = "<group>"; };
 		F135207925A73E4B007A35A6 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		F135208225A746AF007A35A6 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		F149584425B0701C0094864D /* SearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
+		F149584925B070AA0094864D /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
 		F153C94825A861B800350FBD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F165F45625B04E4D00F9F996 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		F181C4A925A9FA90003870D1 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		F196F70825AEFFA600DD5305 /* Media.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
 		F1B2B70F25AE1DED006E3814 /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
@@ -94,6 +101,7 @@
 		F1B50D8C25A88DCF00A91972 /* Monitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monitor.swift; sourceTree = "<group>"; };
 		F1B50D9425A891F600A91972 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		F1B50D9925A8946200A91972 /* BaseChatUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseChatUser.swift; sourceTree = "<group>"; };
+		F1C3EBFE25B04307000AC8CC /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		F1ED01D325A921B200B7A6F2 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		F1ED01DD25A926F400B7A6F2 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		F1ED01E525A9277400B7A6F2 /* Sender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sender.swift; sourceTree = "<group>"; };
@@ -211,6 +219,7 @@
 				F135205C25A73AB3007A35A6 /* Storyboards */,
 				F135202A25A73728007A35A6 /* Assets.xcassets */,
 				F1B2B70F25AE1DED006E3814 /* ConversationTableViewCell.swift */,
+				F149584425B0701C0094864D /* SearchResultCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -223,6 +232,7 @@
 				F1ED01E525A9277400B7A6F2 /* Sender.swift */,
 				F1B2B71425AE20DD006E3814 /* Conversation.swift */,
 				F196F70825AEFFA600DD5305 /* Media.swift */,
+				F149584925B070AA0094864D /* SearchResult.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -235,6 +245,7 @@
 				F135208225A746AF007A35A6 /* Extensions.swift */,
 				F1B50D9425A891F600A91972 /* DatabaseManager.swift */,
 				F181C4A925A9FA90003870D1 /* StorageManager.swift */,
+				F165F45625B04E4D00F9F996 /* Color.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -253,6 +264,7 @@
 			children = (
 				F135206025A73D5B007A35A6 /* LoginViewController.swift */,
 				F135206525A73DA3007A35A6 /* RegistrationViewController.swift */,
+				F1C3EBFE25B04307000AC8CC /* EditProfileViewController.swift */,
 			);
 			path = AccountManagement;
 			sourceTree = "<group>";
@@ -527,9 +539,12 @@
 				F135208325A746AF007A35A6 /* Extensions.swift in Sources */,
 				F1B2B71025AE1DED006E3814 /* ConversationTableViewCell.swift in Sources */,
 				F1B50D9A25A8946200A91972 /* BaseChatUser.swift in Sources */,
+				F149584A25B070AA0094864D /* SearchResult.swift in Sources */,
 				F1B2B71525AE20DD006E3814 /* Conversation.swift in Sources */,
 				F1ED01E625A9277400B7A6F2 /* Sender.swift in Sources */,
+				F149584525B0701C0094864D /* SearchResultCell.swift in Sources */,
 				F135202225A73727007A35A6 /* AppDelegate.swift in Sources */,
+				F165F45725B04E4D00F9F996 /* Color.swift in Sources */,
 				F1B50D9525A891F600A91972 /* DatabaseManager.swift in Sources */,
 				F196F70925AEFFA600DD5305 /* Media.swift in Sources */,
 				F1ED01D425A921B200B7A6F2 /* ChatViewController.swift in Sources */,
@@ -537,6 +552,7 @@
 				F1ED01DE25A926F400B7A6F2 /* Message.swift in Sources */,
 				F135206625A73DA3007A35A6 /* RegistrationViewController.swift in Sources */,
 				F135207A25A73E4B007A35A6 /* SettingsViewController.swift in Sources */,
+				F1C3EBFF25B04307000AC8CC /* EditProfileViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

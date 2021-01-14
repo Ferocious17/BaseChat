@@ -14,7 +14,9 @@ class ChatViewController: MessagesViewController {
     
     public var isNewConversation = false
     public let otherUserEmail: String
-    private let conversationID: String?
+    private var conversationID: String?
+    private var senderPhotoURL: URL?
+    private var receiverPhotoURL: URL?
     
     public static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -94,6 +96,8 @@ class ChatViewController: MessagesViewController {
          messagesCollectionView.tintColor = .red
          messages.append(Message(sender: selfSender as! SenderType, messageId: "1", sentDate: Date(), kind: .text("Lol")))
          */
+        
+        
         
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
@@ -344,6 +348,9 @@ extension ChatViewController: InputBarAccessoryViewDelegate
                 {
                     print("Message sent")
                     self?.isNewConversation = false
+                    let newConversationID = "conversation_\(message.messageId)"
+                    self?.conversationID = newConversationID
+                    self?.ListenForMessages(newConversationID, true)
                 }
                 else
                 {
@@ -400,6 +407,88 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
         }
         
         fatalError("Self sender is nil, email should be cached!")
+    }
+    
+    func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
+        
+        let sender = message.sender
+        if sender.senderId == selfSender?.senderId
+        {
+            //message from sender
+            if let imageURL = self.senderPhotoURL
+            {
+                avatarView.sd_setImage(with: imageURL, completed: nil)
+            }
+            else
+            {
+                //get URL
+                guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+                    return
+                }
+                
+                let safeEmail = DatabaseManager.SafeEmail(email: email)
+                let path = "images/\(safeEmail)_profile_picture.png"
+                
+                StorageManager.shared.DownloadURL(for: path) { [weak self] (result) in
+                    switch result
+                    {
+                    case .success(let url):
+                        self?.senderPhotoURL = url
+                        DispatchQueue.main.async
+                        {
+                            avatarView.sd_setImage(with: url, completed: nil)
+                        }
+                    case .failure(let error):
+                        print("Error while getting avatar image: \(error)")
+                    }
+                }
+            }
+        }
+        else
+        {
+            //received message
+            if let imageURL = self.receiverPhotoURL
+            {
+                avatarView.sd_setImage(with: imageURL, completed: nil)
+            }
+            else
+            {
+                //get URL
+                let safeEmail = DatabaseManager.SafeEmail(email: DatabaseManager.SafeEmail(email: self.otherUserEmail))
+                let path = "images/\(safeEmail)_profile_picture.png"
+                
+                StorageManager.shared.DownloadURL(for: path) { [weak self] (result) in
+                    switch result
+                    {
+                    case .success(let url):
+                        self?.receiverPhotoURL = url
+                        DispatchQueue.main.async
+                        {
+                            avatarView.sd_setImage(with: url, completed: nil)
+                        }
+                    case .failure(let error):
+                        print("Error while getting avatar image: \(error)")
+                    }
+                }
+            }
+        }
+    }
+    
+    func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+        let sender = message.sender
+        var color: UIColor
+        if sender.senderId == selfSender?.senderId
+        {
+            //message of sender
+            color = Color.SenderBubbleColor
+        }
+        else
+        {
+            //received message
+            color = Color.ReceiverBubbleColor
+        }
+
+        return color
     }
     
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType

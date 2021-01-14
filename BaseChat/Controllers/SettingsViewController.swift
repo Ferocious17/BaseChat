@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import SDWebImage
 
 class SettingsViewController: UIViewController {
     
@@ -24,6 +25,25 @@ class SettingsViewController: UIViewController {
         return imageView
     }()
     
+    private let userNameLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.text = UserDefaults.standard.value(forKey: "name") as? String ?? "Name"
+        label.font = .systemFont(ofSize: 30, weight: .semibold)
+        return label
+    }()
+    
+    private let editProfileButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Edit profile", for: .normal)
+        button.backgroundColor = .link
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 12
+        button.layer.masksToBounds = true
+        button.titleLabel?.font = .systemFont(ofSize: 20, weight: .semibold)
+        return button
+    }()
+    
     private let signOutButton: UIButton = {
         let button = UIButton()
         button.setTitle("Sign out", for: .normal)
@@ -39,13 +59,18 @@ class SettingsViewController: UIViewController {
         super.viewDidLoad()
         signOutButton.addTarget(self, action: #selector(DidTapSignOut), for: .touchUpInside)
         view.addSubview(profilePicture)
+        view.addSubview(userNameLabel)
+        view.addSubview(editProfileButton)
         view.addSubview(signOutButton)
         view.backgroundColor = .systemBackground
         profilePicture.isUserInteractionEnabled = true
+        
+        editProfileButton.addTarget(self, action: #selector(DidTapEditProfile), for: .touchUpInside)
+        
         let gesture = UITapGestureRecognizer(target: self, action: #selector(DidTapChangeProfilePicture))
         profilePicture.addGestureRecognizer(gesture)
     }
-    
+
     override func viewDidAppear(_ animated: Bool)
     {
         super.viewDidAppear(animated)
@@ -64,26 +89,28 @@ class SettingsViewController: UIViewController {
                                       height: size)
         profilePicture.layer.cornerRadius = profilePicture.width/2
         
+        userNameLabel.frame = CGRect(x: 30,
+                                     y: profilePicture.bottom+20,
+                                     width: view.width-60,
+                                     height: 52)
+        
+        editProfileButton.frame = CGRect(x: 30,
+                                         y: userNameLabel.bottom+50,
+                                         width: view.width-60,
+                                         height: 52)
+        
         signOutButton.frame = CGRect(x: 30,
-                                     y: view.bottom-150,
+                                     y: editProfileButton.bottom+20,
                                      width: view.width-60,
                                      height: 52)
     }
     
-    private func DownloadImage(imageView: UIImageView, url: URL)
+    @objc func DidTapEditProfile()
     {
-        URLSession.shared.dataTask(with: url) { (data, _, error) in
-            guard let data = data, error == nil else
-            {
-                return
-            }
-            
-            DispatchQueue.main.async
-            {
-                let image = UIImage(data: data)
-                self.profilePicture.image = image
-            }
-        }.resume()
+        let viewController = EditProfileViewController()
+        viewController.title = "Edit profile"
+        viewController.navigationItem.largeTitleDisplayMode = .always
+        navigationController?.pushViewController(viewController, animated: true)
     }
     
     public func LoadProfilePicture()
@@ -102,7 +129,7 @@ class SettingsViewController: UIViewController {
             switch result
             {
             case .success(let url):
-                self?.DownloadImage(imageView: self!.profilePicture, url: url)
+                self?.profilePicture.sd_setImage(with: url, completed: nil)
             case .failure(let error):
                 print("Failed to get download URL: \(error)")
             }
@@ -124,6 +151,8 @@ class SettingsViewController: UIViewController {
                 return
             }
         
+            UserDefaults.standard.setValue(nil, forKey: "email")
+            UserDefaults.standard.setValue(nil, forKey: "name")
             strongSelf.SignOut()
         }))
         

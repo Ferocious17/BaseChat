@@ -41,7 +41,6 @@ class ConversationsViewController: UIViewController {
         view.addSubview(tableView)
         view.addSubview(noConversationsLabel)
         SetupTableView()
-        FetchConversations()
         StartListeningForConversations()
         LoginObserver()
     }
@@ -56,6 +55,11 @@ class ConversationsViewController: UIViewController {
     {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
+        
+        noConversationsLabel.frame = CGRect(x: view.width/4,
+                                      y: view.height/2-50,
+                                      width: view.width/2,
+                                      height: 100)
     }
     
     private func LoginObserver()
@@ -84,18 +88,25 @@ class ConversationsViewController: UIViewController {
         DatabaseManager.shared.GetAllConversations(for: safeEmail) { [weak self] (result) in
             switch result
             {
-            case .success(let conversations):
-                guard !conversations.isEmpty else {
+            case .success(let fetchedConversations):
+                guard !fetchedConversations.isEmpty else {
+                    self?.tableView.isHidden = true
+                    self?.noConversationsLabel.isHidden = false
                     return
                 }
                 
-                self?.conversations = conversations
+                self?.noConversationsLabel.isHidden = true
+                self?.tableView.isHidden = false
+                self?.conversations = fetchedConversations
+                
                 DispatchQueue.main.async
                 {
                     self?.tableView.reloadData()
                 }
                 
             case .failure(let error):
+                self?.tableView.isHidden = true
+                self?.noConversationsLabel.isHidden = false
                 print("Failed to get all conversations: \(error)")
             }
         }
@@ -109,7 +120,7 @@ class ConversationsViewController: UIViewController {
             let currentConversations = self?.conversations
             
             if let targetConversation = currentConversations?.first(where: {
-                $0.otherUserEmail == DatabaseManager.SafeEmail(email: result["email"]!)
+                $0.otherUserEmail == DatabaseManager.SafeEmail(email: result.email)
             })
             {
                 let viewController = ChatViewController(with: targetConversation.otherUserEmail, id: targetConversation.id)
@@ -127,11 +138,10 @@ class ConversationsViewController: UIViewController {
         present(navViewController, animated: true, completion: nil)
     }
     
-    private func CreateNewConversation(result: [String:String])
+    private func CreateNewConversation(result: SearchResult)
     {
-        guard let name = result["name"], let email = result["email"] else {
-            return
-        }
+        let name = result.name
+        let email = result.email
         
         //Check in database if conversation already exists
         let safeEmail = DatabaseManager.SafeEmail(email: email)
@@ -179,11 +189,6 @@ class ConversationsViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
     }
-    
-    private func FetchConversations()
-    {
-        tableView.isHidden = false
-    }
 }
 
 extension ConversationsViewController: UITableViewDelegate, UITableViewDataSource
@@ -230,9 +235,13 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
             //delete
             let conversationID = conversations[indexPath.row].id
             tableView.beginUpdates()
-            DatabaseManager.shared.DeleteConversation(conversationID: conversationID) { [weak self] (success) in
-                self?.conversations.remove(at: indexPath.row)
-                tableView.deleteRows(at: [indexPath], with: .left)
+            self.conversations.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .left)
+            DatabaseManager.shared.DeleteConversation(conversationID: conversationID) { (success) in
+                if !success
+                {
+                    print("Failed to delete conversation")
+                }
             }
             tableView.endUpdates()
         }
