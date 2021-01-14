@@ -16,21 +16,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ExtendedLogo" translatesAutoresizingMaskIntoConstraints="NO" id="4vC-Ga-Ell">
-                                <rect key="frame" x="40" y="233" width="334" height="258"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="FinalBaseChatLogo" translatesAutoresizingMaskIntoConstraints="NO" id="4vC-Ga-Ell">
+                                <rect key="frame" x="54" y="226" width="307" height="229"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="4vC-Ga-Ell" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="6gq-Em-J9g"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="4vC-Ga-Ell" secondAttribute="bottom" constant="371" id="C2O-oA-APL"/>
-                            <constraint firstItem="4vC-Ga-Ell" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="L3B-eW-tPw"/>
-                            <constraint firstItem="4vC-Ga-Ell" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Lcp-rE-4S9"/>
-                            <constraint firstItem="4vC-Ga-Ell" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="40" id="clE-EN-6lV"/>
-                            <constraint firstItem="4vC-Ga-Ell" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="189" id="wKU-Px-fFl"/>
-                            <constraint firstItem="4vC-Ga-Ell" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="xWo-pX-RC7"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="4vC-Ga-Ell" secondAttribute="trailing" constant="40" id="xpc-t8-FbA"/>
+                            <constraint firstItem="4vC-Ga-Ell" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="182" id="Veo-lm-god"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="4vC-Ga-Ell" secondAttribute="trailing" constant="53" id="iwP-E2-2ps"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="4vC-Ga-Ell" secondAttribute="bottom" constant="407" id="x0U-qw-yFD"/>
+                            <constraint firstItem="4vC-Ga-Ell" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="54" id="yK9-6H-6Q5"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -40,7 +36,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ExtendedLogo" width="514" height="635"/>
+        <image name="FinalBaseChatLogo" width="710" height="581"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

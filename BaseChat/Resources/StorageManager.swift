@@ -14,20 +14,17 @@ public enum StorageError: Error
     case FailedToGetDownloadURL
 }
 
+///Manager for storage interactions
 final class StorageManager
 {
     static let shared = StorageManager()
     
     private let storage = Storage.storage().reference()
     
-    /*
-     /images/caner-kaya2003-outlook-com_profile_picture.png
-     */
-    
     public typealias UploadMediaCompletion = (Result<String, Error>) -> Void
     public typealias DownloadMediaCompletion = (Result<URL, Error>) -> Void
     
-    // Uploads picked profile picture to firebase storage and returns completion with URL string to download
+    /// Uploads picked profile picture to firebase storage and returns completion with URL string to download
     public func UploadProfilePicture(with data: Data, fileName: String, completion: @escaping UploadMediaCompletion)
     {
         storage.child("images/\(fileName)").putData(data, metadata: nil) { (metadata, error) in

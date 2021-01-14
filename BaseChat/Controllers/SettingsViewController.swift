@@ -9,8 +9,6 @@ import UIKit
 import FirebaseAuth
 
 class SettingsViewController: UIViewController {
-
-    //public static let shared = SettingsViewController()
     
     private let profilePicture: UIImageView = {
         let imageView = UIImageView()
@@ -42,7 +40,7 @@ class SettingsViewController: UIViewController {
         signOutButton.addTarget(self, action: #selector(DidTapSignOut), for: .touchUpInside)
         view.addSubview(profilePicture)
         view.addSubview(signOutButton)
-        
+        view.backgroundColor = .systemBackground
         profilePicture.isUserInteractionEnabled = true
         let gesture = UITapGestureRecognizer(target: self, action: #selector(DidTapChangeProfilePicture))
         profilePicture.addGestureRecognizer(gesture)
@@ -51,9 +49,6 @@ class SettingsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool)
     {
         super.viewDidAppear(animated)
-        /*let imagePNGData = UserDefaults.standard.data(forKey: "profilePictureData")
-        let optionalImagePNGData = UIImage(systemName: "person.circle")?.pngData()
-        profilePicture.image = UIImage(data: (imagePNGData ?? optionalImagePNGData)!)*/
         LoadProfilePicture()
     }
     
@@ -87,8 +82,6 @@ class SettingsViewController: UIViewController {
             {
                 let image = UIImage(data: data)
                 self.profilePicture.image = image
-                /*let imagePNGData = image?.pngData()
-                UserDefaults.standard.setValue(imagePNGData, forKey: "profilePictureData")*/
             }
         }.resume()
     }
@@ -156,6 +149,7 @@ class SettingsViewController: UIViewController {
     }
 }
 
+// MARK: Camera / Photo actions
 extension SettingsViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate
 {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any])

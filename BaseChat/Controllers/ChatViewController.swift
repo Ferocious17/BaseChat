@@ -85,8 +85,7 @@ class ChatViewController: MessagesViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //view.backgroundColor = .purple
-        
+        view.backgroundColor = .systemBackground
         showMessageTimestampOnSwipeLeft = true
         
         //messageInputBar.sendButton.image = UIImage(systemName: "paperplane.fill")?.Rotate(radians: .pi/4)
@@ -131,7 +130,7 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
     {
         let alert = UIAlertController(title: "Attach media", message: "What would you like to attach?", preferredStyle: .actionSheet)
         
-        alert.addAction(UIAlertAction(title: "Select photo from library", style: .default, handler: { [weak self] (_) in
+        alert.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { [weak self] (_) in
             self?.PresentPhotoLibrary()
         }))
         
@@ -139,7 +138,7 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
             self?.PresentCamera()
         }))
         
-        alert.addAction(UIAlertAction(title: "Select video from library", style: .default, handler: { [weak self] (_) in
+        alert.addAction(UIAlertAction(title: "Video library", style: .default, handler: { [weak self] (_) in
             self?.PresentVideoLibrary()
         }))
         
@@ -200,8 +199,7 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
         picker.dismiss(animated: true, completion: nil)
         guard let messageID = GenerateMessageID(),
               let conversationID = conversationID,
-              let name = self.title
-              /*let selfSender = selfSender*/ else {
+              let name = self.title else {
             return
         }
         
@@ -218,51 +216,6 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
             let fileName = "video_message_\(messageID.replacingOccurrences(of: " ", with: "-")).mov"
             UploadVideo(videoURL: videoURL, fileName: fileName, messageID: messageID, conversationID: conversationID, name: name)
         }
-        
-        
-        
-        //Upload image
-        /*StorageManager.shared.UploadMessagePhoto(with: imageData, fileName: fileName) { [weak self] (result) in
-            guard let strongSelf = self else {
-                return
-            }
-            
-            switch result
-            {
-            case .success(let urlString):
-                //Send message
-                print("Message image uploaded: \(urlString)")
-                
-                guard let downloadURL = URL(string: urlString),
-                      let placeholder = UIImage(systemName: "globe") else {
-                    return
-                }
-                
-                let media = Media(url: downloadURL,
-                                  image: nil,
-                                  placeholderImage: placeholder,
-                                  size: .zero)
-                
-                let message = Message(sender: selfSender,
-                                      messageId: messageID,
-                                      sentDate: Date(),
-                                      kind: .photo(media))
-                
-                DatabaseManager.shared.SendMessage(to: conversationID, otherUserEmail: strongSelf.otherUserEmail, name: name, newMessage: message) { (success) in
-                    if success
-                    {
-                        print("Photo message sent")
-                    }
-                    else
-                    {
-                        print("Failed to send photo message")
-                    }
-                }
-                
-            case .failure(let error):
-                print("Photo message upload error: \(error)")
-            }
-        }*/
     }
     
     private func UploadVideo(videoURL: URL, fileName: String, messageID: String, conversationID: String, name: String)
@@ -361,57 +314,6 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
             }
         }
     }
-    
-    /*func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        picker.dismiss(animated: true, completion: nil)
-        guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage,
-              let imageData = image.pngData(),
-              let messageID = GenerateMessageID(),
-              let conversationID = conversationID,
-              let name = self.title else {
-            return
-        }
-        
-        let fileName = "photo_message_\(messageID)"
-        
-        //Upload image
-        UploadImage(imageData: imageData, fileName: fileName, messageID: messageID, name: name, conversationID: conversationID)
-    }
-    
-    private func SendImage(url: String, messageID: String, name: String, conversationID: String)
-    {
-        //Send image message
-        guard let strongSelf = self else {
-            return
-        }
-        
-        guard let downloadURL = URL(string: url),
-              let placeholder = UIImage(systemName: "globe"),
-              let selfSender = selfSender else {
-            return
-        }
-        
-        let media = Media(url: downloadURL,
-                          image: nil,
-                          placeholderImage: placeholder,
-                          size: .zero)
-        
-        let message = Message(sender: selfSender,
-                              messageId: messageID,
-                              sentDate: Date(),
-                              kind: .photo(media))
-        
-        DatabaseManager.shared.SendMessage(to: conversationID, otherUserEmail: otherUserEmail, name: name, newMessage: message) { (success) in
-            if success
-            {
-                print("Photo message sent")
-            }
-            else
-            {
-                print("Failed to send photo message")
-            }
-        }
-    }*/
 }
 
 extension ChatViewController: InputBarAccessoryViewDelegate
@@ -452,7 +354,6 @@ extension ChatViewController: InputBarAccessoryViewDelegate
         else
         {
             //use existing conversation from database and append to it
-            
             guard let conversationID = conversationID, let name = self.title else {
                 return
             }
@@ -468,6 +369,8 @@ extension ChatViewController: InputBarAccessoryViewDelegate
                 }
             }
         }
+        
+        inputBar.inputTextView.text = nil
     }
     
     private func GenerateMessageID() -> String?

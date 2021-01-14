@@ -8,6 +8,7 @@
 import UIKit
 import FirebaseAuth
 import JGProgressHUD
+import Network
 
 class LoginViewController: UIViewController {
 
@@ -22,7 +23,7 @@ class LoginViewController: UIViewController {
     
     private let logo: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "BaseChat_Logo")
+        imageView.image = UIImage(named: "FinalBaseChatLogo")
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
@@ -45,11 +46,10 @@ class LoginViewController: UIViewController {
         field.layer.borderColor = UIColor.lightGray.cgColor
         field.placeholder = "email@provider.com"
         field.keyboardType = .emailAddress
-        
+        field.backgroundColor = .secondarySystemBackground
         //add a padding to the left
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         field.leftViewMode = .always
-        //field.backgroundColor = .secondarySystemBackground
         
         return field
     }()
@@ -63,13 +63,12 @@ class LoginViewController: UIViewController {
         field.layer.cornerRadius = 12
         field.layer.borderWidth = 1
         field.layer.borderColor = UIColor.lightGray.cgColor
+        field.backgroundColor = .secondarySystemBackground
         field.placeholder = "Password"
         
         //add a padding to the left
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         field.leftViewMode = .always
-        //field.backgroundColor = .white
-        //field.attributedPlaceholder = NSAttributedString(string: "Password", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
         
         return field
     }()
@@ -109,19 +108,11 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         
         //make the keyboard disappear if user taps on empty space on screen
         let dismissKeyboard = UITapGestureRecognizer(target: self, action: #selector(DismissKeyboard))
         view.addGestureRecognizer(dismissKeyboard)
-        
-        // title = "Log in"
-        
-        /*navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Sign up",
-                                                            style: .done,
-                                                            target: self,
-                                                            action: #selector(DidTapSignUp))
-        */
  
         //Add target / function to buttons
         loginButton.addTarget(self, action: #selector(DidTapLoginButton), for: .touchUpInside)
@@ -148,6 +139,13 @@ class LoginViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.navigationController?.setNavigationBarHidden(true, animated: true)
+        
+        if Reachability.isConnectedToNetwork()
+        {
+            let alert = UIAlertController(title: "No internet", message: "Please check your internet connection", preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+        }
     }
     
     override func viewDidLayoutSubviews()
@@ -192,6 +190,26 @@ class LoginViewController: UIViewController {
                                    height: 52)
     }
     
+    private func CheckInternet()
+    {
+        //leaving the constructor empty checks for any type of internet connection
+        //We want to check both cellular and wifi so we leave it empty
+        let monitor = NWPathMonitor()
+        monitor.pathUpdateHandler = { path in
+            if path.status != .satisfied
+            {
+                DispatchQueue.main.async
+                {
+                    let alert = UIAlertController(title: "Internet connection", message: "Please connect your device to the internet", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+                }
+            }
+        }
+        
+        let queue = DispatchQueue(label: "NetworkMonitor")
+        monitor.start(queue: queue)
+    }
+    
     @objc private func DidTapLoginButton()
     {
         //Get rid of the keyboard
@@ -232,9 +250,7 @@ class LoginViewController: UIViewController {
             {
                 print("Login failed")
                 print(error!)
-                
-                strongSelf.AlertLoginError("Login failed", "Login failed. Please try again later")
-                
+                strongSelf.AlertLoginError("Login failed", "Login failed. Please check your credentials")
                 return
             }
             
@@ -265,12 +281,9 @@ class LoginViewController: UIViewController {
             
             print("Logged in user: \(user)")
             strongSelf.navigationController?.dismiss(animated: true, completion: nil)
-            //strongSelf.navigationController?.pushViewController(ConversationsViewController(), animated: true)
         }
     }
-    
-    //Error code 0: Empty fields
-    //Error code 1: Missing internet connection
+
     private func AlertLoginError(_ title: String = "Empty fields", _ message: String = "Please fill in all fields")
     {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)

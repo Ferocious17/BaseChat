@@ -49,15 +49,12 @@ class ConversationsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool)
     {
         super.viewDidAppear(animated)
-        ValidateAuthentication()
-        //<SettingsViewController.shared.LoadProfilePicture()
-        
+        ValidateAuthentication()        
     }
     
     override func viewDidLayoutSubviews()
     {
         super.viewDidLayoutSubviews()
-        
         tableView.frame = view.bounds
     }
     
@@ -108,8 +105,23 @@ class ConversationsViewController: UIViewController {
     {
         let viewController = NewConversationViewController()
         viewController.completion = { [weak self] result in
-            //print("\(result)")
-            self?.CreateNewConversation(result: result)
+            
+            let currentConversations = self?.conversations
+            
+            if let targetConversation = currentConversations?.first(where: {
+                $0.otherUserEmail == DatabaseManager.SafeEmail(email: result["email"]!)
+            })
+            {
+                let viewController = ChatViewController(with: targetConversation.otherUserEmail, id: targetConversation.id)
+                viewController.isNewConversation = false
+                viewController.title = targetConversation.name
+                viewController.navigationItem.largeTitleDisplayMode = .never
+                self?.navigationController?.pushViewController(viewController, animated: true)
+            }
+            else
+            {
+                self?.CreateNewConversation(result: result)
+            }
         }
         let navViewController = UINavigationController(rootViewController: viewController)
         present(navViewController, animated: true, completion: nil)
@@ -121,12 +133,31 @@ class ConversationsViewController: UIViewController {
             return
         }
         
-        //Nil for conversationID because has no ID yet since it is being created now
-        let viewController = ChatViewController(with: email, id: nil)
-        viewController.isNewConversation = true
-        viewController.title = name
-        viewController.navigationItem.largeTitleDisplayMode = .never
-        navigationController?.pushViewController(viewController, animated: true)
+        //Check in database if conversation already exists
+        let safeEmail = DatabaseManager.SafeEmail(email: email)
+        DatabaseManager.shared.ConversationExists(with: safeEmail) { [weak self] (result) in
+            guard let strongSelf = self else {
+                return
+            }
+            
+            switch result
+            {
+            case .success(let conversationID):
+                let viewController = ChatViewController(with: email, id: conversationID)
+                viewController.isNewConversation = false
+                viewController.title = name
+                viewController.navigationItem.largeTitleDisplayMode = .never
+                strongSelf.navigationController?.pushViewController(viewController, animated: true)
+                
+            case .failure(_):
+                //Nil for conversationID because has no ID yet since it is being created now
+                let viewController = ChatViewController(with: email, id: nil)
+                viewController.isNewConversation = true
+                viewController.title = name
+                viewController.navigationItem.largeTitleDisplayMode = .never
+                strongSelf.navigationController?.pushViewController(viewController, animated: true)
+            }
+        }
     }
     
     private func ValidateAuthentication()
@@ -173,7 +204,11 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let model = conversations[indexPath.row]
-        
+        OpenConversation(model: model)
+    }
+    
+    func OpenConversation(model: Conversation)
+    {
         let viewController = ChatViewController(with: model.otherUserEmail, id: model.id)
         viewController.title = model.name
         viewController.navigationItem.largeTitleDisplayMode = .never

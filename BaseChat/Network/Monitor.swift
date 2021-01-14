@@ -6,33 +6,26 @@
 //
 
 import Foundation
-import Network
+import SystemConfiguration
 
-class Monitor
+public class Reachability {
+class func isConnectedToNetwork() -> Bool
 {
-    private static func CheckInternet()
-    {
-        //leaving the constructor empty checks for any type of internet connection
-        //We want to check both cellular and wifi so we leave it empty
-        let monitor = NWPathMonitor()
-        monitor.pathUpdateHandler = { path in
-            if path.status == .satisfied
-            {
-                DispatchQueue.main.async
-                {
-                    //...
-                }
-            }
-            else
-            {
-                DispatchQueue.main.async
-                {
-                    //...
-                }
-            }
+    var zeroAddress = sockaddr_in(sin_len: 0, sin_family: 0, sin_port: 0, sin_addr: in_addr(s_addr: 0), sin_zero: (0, 0, 0, 0, 0, 0, 0, 0))
+    zeroAddress.sin_len = UInt8(MemoryLayout.size(ofValue: zeroAddress))
+    zeroAddress.sin_family = sa_family_t(AF_INET)
+
+    let defaultRouteReachability = withUnsafePointer(to: &zeroAddress) {
+        $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {zeroSockAddress in
+            SCNetworkReachabilityCreateWithAddress(nil, zeroSockAddress)
         }
-        
-        let queue = DispatchQueue(label: "NetworkMonitor")
-        monitor.start(queue: queue)
+    }
+    var flags: SCNetworkReachabilityFlags = SCNetworkReachabilityFlags(rawValue: 0)
+    if SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) == false {
+        return false
+    }
+    let isReachable = flags == .reachable
+    let needsConnection = flags == .connectionRequired
+    return isReachable && !needsConnection
     }
 }

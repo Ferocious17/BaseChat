@@ -165,7 +165,6 @@
 				F1B50D8B25A88DB500A91972 /* Network */,
 				F153C94825A861B800350FBD /* GoogleService-Info.plist */,
 				F135205825A73A60007A35A6 /* Resources */,
-				F135205725A73A53007A35A6 /* ViewModels */,
 				F135205625A73A47007A35A6 /* Models */,
 				F135205525A73A41007A35A6 /* Views */,
 				F135205425A73A3C007A35A6 /* Controllers */,
@@ -219,15 +218,13 @@
 		F135205625A73A47007A35A6 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				F1B50D9925A8946200A91972 /* BaseChatUser.swift */,
+				F1ED01DD25A926F400B7A6F2 /* Message.swift */,
+				F1ED01E525A9277400B7A6F2 /* Sender.swift */,
+				F1B2B71425AE20DD006E3814 /* Conversation.swift */,
+				F196F70825AEFFA600DD5305 /* Media.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		F135205725A73A53007A35A6 /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		F135205825A73A60007A35A6 /* Resources */ = {
@@ -237,12 +234,7 @@
 				F135202325A73727007A35A6 /* SceneDelegate.swift */,
 				F135208225A746AF007A35A6 /* Extensions.swift */,
 				F1B50D9425A891F600A91972 /* DatabaseManager.swift */,
-				F1B50D9925A8946200A91972 /* BaseChatUser.swift */,
-				F1ED01DD25A926F400B7A6F2 /* Message.swift */,
-				F1ED01E525A9277400B7A6F2 /* Sender.swift */,
 				F181C4A925A9FA90003870D1 /* StorageManager.swift */,
-				F1B2B71425AE20DD006E3814 /* Conversation.swift */,
-				F196F70825AEFFA600DD5305 /* Media.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";

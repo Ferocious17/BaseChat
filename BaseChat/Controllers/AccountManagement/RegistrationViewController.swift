@@ -35,14 +35,6 @@ class RegistrationViewController: UIViewController {
         return imageView
     }()
     
-    /*private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Sign up"
-        label.font = .boldSystemFont(ofSize: 33)
-        label.textAlignment = .left
-        return label
-    }()*/
-    
     private let firstnameField: UITextField = {
         let field = UITextField()
         field.autocapitalizationType = .none
@@ -56,7 +48,7 @@ class RegistrationViewController: UIViewController {
         //add a padding to the left
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         field.leftViewMode = .always
-        //field.backgroundColor = .white
+        field.backgroundColor = .secondarySystemBackground
         
         return field
     }()
@@ -74,7 +66,7 @@ class RegistrationViewController: UIViewController {
         //add a padding to the left
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         field.leftViewMode = .always
-        //field.backgroundColor = .white
+        field.backgroundColor = .secondarySystemBackground
         
         return field
     }()
@@ -93,7 +85,7 @@ class RegistrationViewController: UIViewController {
         //add a padding to the left
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         field.leftViewMode = .always
-        //field.backgroundColor = .white
+        field.backgroundColor = .secondarySystemBackground
         
         return field
     }()
@@ -112,7 +104,7 @@ class RegistrationViewController: UIViewController {
         //add a padding to the left
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         field.leftViewMode = .always
-        //field.backgroundColor = .white
+        field.backgroundColor = .secondarySystemBackground
         
         return field
     }()
@@ -138,7 +130,7 @@ class RegistrationViewController: UIViewController {
         view.addGestureRecognizer(dismissKeyboard)
         
         title = "Sign up"
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         
         //Add target / function to buttons$
         signUpButton.addTarget(self, action: #selector(DidTapSignUpButton), for: .touchUpInside)
@@ -178,11 +170,6 @@ class RegistrationViewController: UIViewController {
                             width: size,
                             height: size)
         profilePicture.layer.cornerRadius = profilePicture.width/2
-        
-        /*titleLabel.frame = CGRect(x: 30,
-                                  y: profilePicture.bottom+10,
-                                  width: scrollView.width-60,
-                                  height: 40)*/
         
         firstnameField.frame = CGRect(x: 30,
                                       y: profilePicture.bottom+30,
@@ -226,9 +213,14 @@ class RegistrationViewController: UIViewController {
               !firstname.isEmpty,
               !lastname.isEmpty,
               !email.isEmpty,
-              !password.isEmpty,
-              password.count >= 8 else {
+              !password.isEmpty else {
             AlertSignUpError()
+            return
+        }
+        
+        //Check if password has a minimum length of 8 characters
+        guard password.count >= 8 else {
+            AlertSignUpError("Password too short", "Please enter a password, that has a minimum length of 8 characters")
             return
         }
 
@@ -251,98 +243,50 @@ class RegistrationViewController: UIViewController {
                 return
             }
             
-            //This creates a new user for authentication
-            FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password) { (authResult, error) in
-                guard authResult != nil, error == nil else {
-                    print("Error while creating user")
-                    return
-                }
-               
-                //This inserts the user to a user database
-                let chatUser = BaseChatUser(firstname: firstname, lastname: lastname, emailAddress: email)
-                DatabaseManager.shared.CreateNewUser(with: chatUser) { (success) in
-                    if success
-                    {
-                        guard let image = strongSelf.profilePicture.image, let data = image.pngData() else
-                        {
-                            return
-                        }
-                        
-                        let fileName = chatUser.profilePictureFileName
-                        StorageManager.shared.UploadProfilePicture(with: data, fileName: fileName) { (result) in
-                            switch result
-                            {
-                            case .success(let downloadURL):
-                                UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
-                                print(downloadURL)
-                            case .failure(let error):
-                                print(error)
-                            }
-                        }
-                    }
-                }
-               
-                //return to login view controller
-                strongSelf.navigationController?.popToRootViewController(animated: true)
-            }
+            self?.CreateUser(email: email, password: password, firstname: firstname, lastname: lastname)
         }
-        
-        /*spinner.show(in: view)
-        
-        DatabaseManager.shared.UserExists(with: email!) { (exists) in
-            
-            print(exists)
-            
-            DispatchQueue.main.async
-            {
-                self.spinner.dismiss()
+       
+    }
+    
+    ///Creates the user
+    private func CreateUser(email: String, password: String, firstname: String, lastname: String)
+    {
+        //This creates a new user for authentication
+        FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password) { (authResult, error) in
+            guard authResult != nil, error == nil else {
+                print("Error while creating user")
+                return
             }
-            
-            if !exists
-            {
-                //Creates new user for authentication
-                FirebaseAuth.Auth.auth().createUser(withEmail: email!, password: password!) { (authResult, error) in
-                    guard authResult != nil, error == nil else
+           
+            //This inserts the user to a user database
+            let chatUser = BaseChatUser(firstname: firstname, lastname: lastname, emailAddress: email)
+            DatabaseManager.shared.CreateNewUser(with: chatUser) { (success) in
+                if success
+                {
+                    guard let image = self.profilePicture.image, let data = image.pngData() else
                     {
-                        print("Error while creating user")
                         return
                     }
                     
-                    //Creates new record in user database
-                    //Not to be interchanged with the step above!
-                    let chatUser = BaseChatUser(firstname: firstname!, lastname: lastname!, emailAddress: email!)
-                    DatabaseManager.shared.CreateNewUser(with: chatUser) { (success) in
-                        if success
+                    let fileName = chatUser.profilePictureFileName
+                    StorageManager.shared.UploadProfilePicture(with: data, fileName: fileName) { (result) in
+                        switch result
                         {
-                            guard let image = self.profilePicture.image, let data = image.pngData() else
-                            {
-                                return
-                            }
-                            
-                            let fileName = chatUser.profilePicutreFileName
-                            StorageManager.shared.UploadProfilePicture(with: data, fileName: fileName) { (result) in
-                                switch result
-                                {
-                                case .success(let downloadURL):
-                                    UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
-                                    print(downloadURL)
-                                case .failure(let error):
-                                    print(error)
-                                }
-                            }
+                        case .success(let downloadURL):
+                            UserDefaults.standard.set(downloadURL, forKey: "profile_picture_url")
+                            print(downloadURL)
+                        case .failure(let error):
+                            print(error)
                         }
                     }
                 }
             }
-            else
-            {
-                self.AlertSignUpError("E-Mail address taken", "This e-mail address is already taken by another user")
-            }
-        }*/
+           
+            //return to login view controller
+            self.navigationController?.popToRootViewController(animated: true)
+        }
     }
     
-    //Error code 0: Empty fields
-    //Error code 1: Password too short
     private func AlertSignUpError(_ title: String = "Empty fields", _ message: String = "Please fill in all fields") -> Void
     {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -394,6 +338,7 @@ extension RegistrationViewController: UITextFieldDelegate
     }
 }
 
+// MARK: Camera / Photo actions
 extension RegistrationViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate
 {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any])

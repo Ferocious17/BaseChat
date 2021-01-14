@@ -14,6 +14,4 @@ struct Media: MediaItem
     var image: UIImage?
     var placeholderImage: UIImage
     var size: CGSize
-    
-    
 }

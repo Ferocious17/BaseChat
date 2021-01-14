@@ -33,7 +33,7 @@ class PhotoViewerController: UIViewController {
         title = "Media"
         navigationItem.largeTitleDisplayMode = .never
         //view.backgroundColor = UIColor(red: 49, green: 49, blue: 49, alpha: 0.5)
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         view.addSubview(imageView)
         self.imageView.sd_setImage(with: self.url, completed: nil)
     }
